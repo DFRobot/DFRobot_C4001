@@ -1,0 +1,6 @@
+# Build artifacts (test harness output, staged sanitizer runtimes)
+build/
+
+# Python bytecode
+__pycache__/
+*.pyc

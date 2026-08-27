@@ -4,8 +4,8 @@
   * @copyright Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
   * @license The MIT License (MIT)
   * @author ZhixinLiu(zhixin.liu@dfrobot.com)
-  * @version V1.0
-  * @date 2024-02-02
+  * @version V1.1
+  * @date 2026-08-27
   * @url https://github.com/dfrobot/DFRobot_C4001
   */
 
@@ -43,10 +43,17 @@ void setup()
   Serial.begin(115200);
   while(!Serial);
   while(!radar.begin()){
-    Serial.println("NO Deivces !");
+    Serial.print("Not found: ");
+    Serial.println(radar.beginErrorString());
     delay(1000);
   }
   Serial.println("Device connected!");
+
+  // The C4001 has a 15-second post-power-on lockout for configuration commands.
+  // Wait until it is ready before setting anything (setters return NotReady).
+  if(!radar.waitForConfigReady()){
+    Serial.println("Timed out waiting for config lockout to clear");
+  }
 
   // speed Mode
   radar.setSensorMode(eSpeedMode);
@@ -71,12 +78,14 @@ void setup()
    * max Detection range Maximum distance, unit cm, range 2.4~20m (240~2000)
    * thres Target detection threshold, dimensionless unit 0.1, range 0~6553.5 (0~65535)
    */
-  if(radar.setDetectThres(/*min*/11, /*max*/1200, /*thres*/10)){
-    Serial.println("set detect threshold successfully");
-  }
+  C4001Result r = radar.setDetectThres(/*min*/11, /*max*/1200, /*thres*/10);
+  Serial.print("set detect threshold: ");
+  Serial.println(radar.resultToString(r));
 
   // set Fretting Detection
-  radar.setFrettingDetection(eON);
+  r = radar.setFrettingDetection(eON);
+  Serial.print("set fretting detection: ");
+  Serial.println(radar.resultToString(r));
   
   // get confige params
   Serial.print("min range = ");

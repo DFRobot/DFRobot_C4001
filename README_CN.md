@@ -32,6 +32,16 @@
 
 ## 方法
 
+> **⚠️ 硬件注意事项 — OUT 引脚：** 在一台已测试的 SEN0610（12 m）整机上，
+> `setPwm` / `setIoPolarity` 均返回成功且回读数值完全一致，但 OUT 引脚在所有
+> 占空比/极性组合下始终保持静态高电平，仅表现为"检测到目标即触发的电平输出"。
+> 详细证据、测试方法与适用范围见 [`HARDWARE_NOTES.md`](HARDWARE_NOTES.md)。
+> 设计依赖 OUT 做 PWM/模拟输出的应用前，请先在实际整机上验证。
+>
+> 完整、最新的 API 说明以 `src/DFRobot_C4001.h` 为准；下方为常用方法速览。
+> 1.0.0 的旧拼写 `setIoPolaity` / `getIoPolaity` / `getKeepTimerout` 仍可编译
+> （已标记弃用，建议改用新名称）。
+
 ```C++
   /**
    * @fn motionDetection
@@ -72,11 +82,11 @@
   uint8_t getTrigDelay(void);
 
   /**
-   * @fn getKeepTimerout
+   * @fn getKeepTimeout
    * @brief 获取物体持续超时时间
-   * @return  uint16_t 
+   * @return uint16_t，无应答时返回 0
    */
-  uint16_t getKeepTimerout(void);
+  uint16_t getKeepTimeout(void);
 
   /**
    * @fn getTrigRange
@@ -158,21 +168,25 @@
   sSensorStatus_t getStatus(void);
 
   /**
-   * @fn setIoPolaity
-   * @brief 设置io口极性
+   * @fn setIoPolarity
+   * @brief 设置io口极性（仅 UART 后端支持，I2C 返回 NotSupported）
    * @param value
    * @n     0：有目标时输出低电平，无目标时输出高电平
    * @n     1：有目标时输出高电平，无目标时输出低电平（默认状态）
-   * @return true or false 
+   * @param verify 是否回读校验（默认 true）
+   * @warning 硬件注意事项（见 HARDWARE_NOTES.md §1）：在至少一台 SEN0610 12m
+   *          整机上，该命令被接受且回读一致，但 OUT 引脚保持静态高电平，
+   *          并不跟随极性配置。请先在实际整机上验证。
+   * @return C4001Result
    */
-  bool setIoPolaity(uint8_t value);
+  C4001Result setIoPolarity(uint8_t value, bool verify = true);
 
   /**
-   * @fn getIoPolaity
+   * @fn getIoPolarity
    * @brief 获取io口极性状态
-   * @return uint8_t 配置的I/O 口检测到目标后，引脚输出的信号电平
+   * @return uint8_t 配置的I/O 口检测到目标后，引脚输出的信号电平，无应答时返回 0
    */
-  uint8_t getIoPolaity(void);
+  uint8_t getIoPolarity(void);
 
   /**
    * @fn setPwm
@@ -181,7 +195,11 @@
    * @param pwm2  检测到目标后，OUT引脚输出信号的占空比，取值范围：0～100
    * @param timer  从pwm1 占空比渐变为pwm2 占空比的时间，取值范围：0～255，对应时间值 = timer*64ms
    * @n            如timer=20，占空比从pwm1渐变为pwm2需要 20*64ms=1.28s。
-   * @return true or false 
+   * @warning 硬件注意事项（见 HARDWARE_NOTES.md §1）：在至少一台 SEN0610 12m
+   *          整机上进行过 8 组合占空比/极性实测，配置均被保存且回读一致，
+   *          但 OUT 引脚从未产生任何调制（始终静态高电平）。OUT 更适合作为
+   *          存在触发的电平输出使用。
+   * @return true or false
    */
   bool setPwm(uint8_t pwm1 , uint8_t pwm2, uint8_t timer);
 
@@ -292,6 +310,10 @@ Micro:bit          |      √       | nonsupport uart |             |
 
 ## 历史
 - 2024/02/26 - V1.0.0 版本
+- 2026/08/27 - V1.1.0 版本：解析器内存安全修复、阻塞读取加上限、连接探测、
+  `C4001Result` 校验 API、`sendRawCommand`、`save()`/`factoryReset()`、
+  `beginConfig`/`endConfig`、波特率扫描、新增示例与测试，详见
+  [`CHANGES.md`](CHANGES.md)。
 
 ## 创作者
 

@@ -6,20 +6,31 @@
 # Datatypes (KEYWORD1)
 #######################################
 
+DFRobot_C4001	KEYWORD1
 DFRobot_C4001_I2C	KEYWORD1
 DFRobot_C4001_UART	KEYWORD1
+C4001Result	KEYWORD1
+
+sAllData_t	KEYWORD1
+sSensorStatus_t	KEYWORD1
+sPrivateData_t	KEYWORD1
+sResponseData_t	KEYWORD1
+sPwmData_t	KEYWORD1
+
+eSetMode_t	KEYWORD1
+eMode_t	KEYWORD1
+eSwitch_t	KEYWORD1
+eBeginError_t	KEYWORD1
+
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 
 motionDetection	KEYWORD2
 setSensor	KEYWORD2
-setDelay	KEYWORD2
-
+begin	KEYWORD2
 getTrigDelay	KEYWORD2
-eResetSensor	KEYWORD2
-eStopSensor KEYWORD2
-
+getKeepTimeout	KEYWORD2
 getKeepTimerout	KEYWORD2
 getTrigRange	KEYWORD2
 getMaxRange	KEYWORD2
@@ -30,7 +41,9 @@ setKeepSensitivity	KEYWORD2
 getTrigSensitivity	KEYWORD2
 getKeepSensitivity	KEYWORD2
 getStatus	KEYWORD2
+setIoPolarity	KEYWORD2
 setIoPolaity	KEYWORD2
+getIoPolarity	KEYWORD2
 getIoPolaity	KEYWORD2
 setPwm	KEYWORD2
 getPwm	KEYWORD2
@@ -45,11 +58,17 @@ getTMaxRange	KEYWORD2
 getThresRange	KEYWORD2
 setFrettingDetection	KEYWORD2
 getFrettingDetection	KEYWORD2
-wRCMD	KEYWORD2
-anaysisResponse	KEYWORD2
-writeCMD	KEYWORD2
-anaysisData	KEYWORD2
-
+setDelay	KEYWORD2
+beginConfig	KEYWORD2
+endConfig	KEYWORD2
+save	KEYWORD2
+factoryReset	KEYWORD2
+sendRawCommand	KEYWORD2
+resultToString	KEYWORD2
+isReadyForConfig	KEYWORD2
+waitForConfigReady	KEYWORD2
+beginErrorString	KEYWORD2
+scanBaudRates	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
@@ -57,3 +76,30 @@ anaysisData	KEYWORD2
 
 DEVICE_ADDR_0	LITERAL1
 DEVICE_ADDR_1	LITERAL1
+
+eStartSen	LITERAL1
+eStopSen	LITERAL1
+eResetSen	LITERAL1
+eRecoverSen	LITERAL1
+eSaveParams	LITERAL1
+eChangeMode	LITERAL1
+
+eExitMode	LITERAL1
+eSpeedMode	LITERAL1
+
+eON	LITERAL1
+eOFF	LITERAL1
+
+Success	LITERAL1
+AckedButUnconfirmed	LITERAL1
+Rejected	LITERAL1
+Timeout	LITERAL1
+NotReady	LITERAL1
+NotSupported	LITERAL1
+
+eBeginNone	LITERAL1
+eBeginNoResponse	LITERAL1
+eBeginWrongAddress	LITERAL1
+eBeginWrongBaud	LITERAL1
+eBeginBootLockout	LITERAL1
+eBeginBusError	LITERAL1

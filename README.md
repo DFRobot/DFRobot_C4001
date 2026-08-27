@@ -13,6 +13,7 @@ Determine whether the human body exists, and its anti-interference ability is re
 * [Summary](#Summary)
 * [Installation](#Installation)
 * [Methods](#Methods)
+* [Examples](#Examples)
 * [Compatibility](#Compatibility)
 * [History](#History)
 * [Credits](#Credits)
@@ -30,335 +31,114 @@ There are two methods for using this library:<br>
 
 ## Methods
 
-```C++
-  /**
-   * @struct sSensorStatus_t
-   * @brief sensor status
-   * @note sensor status
-   */sSensorStatus_t;
+The canonical API docs live in `src/DFRobot_C4001.h`. This section summarizes the
+high-level model, ranges, and units.
 
+### Run mode vs. config mode
 
-  /**
-   * @struct sPrivateData_t
-   * @brief speed mode data
-   */
-  typedef struct{
-    uint8_t number;
-    float speed;
-    float range;
-    uint32_t energy;
-  }sPrivateData_t;
-
-  /**
-   * @struct sResponseData_t
-   * @brief response data
-   */
-  typedef struct{
-    bool status;
-    float response1;
-    float response2;
-    float response3;
-  }sResponseData_t;
-
-
-  /**
-   * @struct sPwmData_t
-   * @brief config pwm data param
-   */
-  typedef struct{
-    uint8_t pwm1;
-    uint8_t pwm2;
-    uint8_t timer;
-  }sPwmData_t;
-
-  /**
-   * @struct sAllData_t
-   * @brief sensor return data
-   */
-  typedef struct{
-    uint8_t exist;
-    sSensorStatus_t sta;
-    sPrivateData_t target;
-  }sAllData_t;
-
-  /**
-   * @enum eMode_t
-   * @brief sensor work mode
-   */
-  typedef enum{
-    eExitMode  = 0x00,
-    eSpeedMode = 0x01,
-  }eMode_t;
-
-  /**
-   * @enum eSwitch_t
-   * @brief Micromotion detection switch
-   */
-  typedef enum{
-    eON  = 0x01,
-    eOFF = 0x00,
-  }eSwitch_t;
-
-  /**
-   * @enum eSetMode_t
-   * @brief Set parameters for the sensor working status
-   */
-  typedef enum{
-    eStartSen   = 0x55,
-    eStopSen    = 0x33,
-    eResetSen   = 0xCC,
-    eRecoverSen = 0xAA,
-    eSaveParams = 0x5C,
-    eChangeMode = 0x3B,
-  }eSetMode_t;
-
-  /**
-   * @fn motionDetection
-   * @brief motion Detection
-   * @return true or false
-   */
-  bool motionDetection(void);
-
-  /**
-   * @fn setSensor
-   * @brief Set the Sensor object
-   * @param mode
-   * @n  eStartSen        start collect
-   * @n  eStopSen         stop collect
-   * @n  eResetSen        reset sensor
-   * @n  eRecoverSen      recover params
-   * @n  eSaveParams      save config
-   * @n  eChangeMode      chagne mode
-   */
-  void setSensor(eSetMode_t mode);
-  
-  /**
-   * @fn setDelay
-   * @brief Set the Delay object
-   * @param trig Trigger delay, unit 0.01s, range 0~2s (0~200)
-   * @param keep Maintain the detection timeout, unit 0.5s, range 2~1500 seconds (4~3000)
-   * @return true or false
-   */
-  bool setDelay(uint8_t trig , uint16_t keep);
-
-  /**
-   * @fn getTrigDelay
-   * @brief Get the Trig Delay object
-   * @return uint8_t 
-   */
-  uint8_t getTrigDelay(void);
-
-  /**
-   * @fn getKeepTimerout
-   * @brief get keep timer out
-   * @return  uint16_t 
-   */
-  uint16_t getKeepTimerout(void);
-
-  /**
-   * @fn getTrigRange
-   * @brief Get the Trig Range object
-   * @n     The triggering distance, in cm, ranges from 2.4 to 20m (240 to 2000). 
-   * @n     The actual configuration range does not exceed the maximum and minimum detection distance.
-   * @return uint16_t 
-   */
-  uint16_t getTrigRange(void);
-
-  /**
-   * @fn getMaxRange
-   * @brief Get the Max Range object
-   * @return  uint16_t 
-   */
-  uint16_t getMaxRange(void);
-
-  /**
-   * @fn getMinRange
-   * @brief Get the Min Range object
-   * @return uint16_t 
-   */
-  uint16_t getMinRange(void);
-
-  /**
-   * @fn setDetectionRange
-   * @brief Set the Detection Range object
-   * @param min Detection range Minimum distance, unit cm, range 0.3~20m (30~2000), not exceeding max, otherwise the function is abnormal.
-   * @param max Detection range Maximum distance, unit cm, range 2.4~20m (240~2000)
-   * @param trig The trigger distance (unit: cm) ranges from 2.4 to 20m (240 to 2000). The actual configuration range does not exceed the maximum and minimum detection distance.
-   * @n          trigger distance is the distance that triggers no one to someone,
-   * @n          For example, if the maximum detection distance is 10 meters, the value of the trigger distance is 6 meters. 
-   * @n          If no one is present, it will be displayed within 6 meters. If it is only between 6-10 meters, it will not start for someone
-   * @return true or false
-   */
-  bool setDetectionRange(uint16_t min, uint16_t max);
-
-  /**
-   * @fn setTrigSensitivity
-   * @brief Set trigger sensitivity, 0~9
-   * @param sensitivity 
-   * @return true or false
-   */
-  bool setTrigSensitivity(uint8_t sensitivity);
-
-  /**
-   * @fn setKeepSensitivity
-   * @brief Set the Keep Sensitivity object，0~9
-   * @param sensitivity 
-   * @return true or false
-   */
-  bool setKeepSensitivity(uint8_t sensitivity);
-
-  /**
-   * @fn getTrigSensitivity
-   * @brief Get the Trig Sensitivity object
-   * @return uint8_t 
-   */
-  uint8_t getTrigSensitivity(void);
-
-  /**
-   * @fn getKeepSensitivity
-   * @brief Get the Keep Sensitivity object
-   * @return uint8_t 
-   */
-  uint8_t getKeepSensitivity(void);
-
-  /**
-   * @fn getStatus
-   * @brief Get the Status object
-   * @return sSensorStatus_t 
-   * @n     workStatus
-   * @n       0 stop
-   * @n       1 start
-   * @n     workMode
-   * @n       0 indicates presence detection
-   * @n       1 is speed measurement and ranging
-   * @n     initStatus
-   * @n       0 not init
-   * @n       1 init success
-   */
-  sSensorStatus_t getStatus(void);
-
-
-  /**
-   * @fn setIoPolaity
-   * @brief Set the Io Polaity object
-   * @param value
-   * @n     0：Output low level when there is a target, output high level when there is no target
-   * @n     1: Output high level when there is a target, output low level when there is no target (default)
-   * @return true or false 
-   */
-  bool setIoPolaity(uint8_t value);
-
-  /**
-   * @fn getIoPolaity
-   * @brief Get the Io Polaity object
-   * @return uint8_t The level of the signal output by the pin after the configured I/O port detects the target
-   */
-  uint8_t getIoPolaity(void);
-
-  /**
-   * @fn setPwm
-   * @brief Set the Pwm object
-   * @param pwm1 When no target is detected, the duty cycle of the output signal of the OUT pin ranges from 0 to 100
-   * @param pwm2 After the target is detected, the duty cycle of the output signal of the OUT pin ranges from 0 to 100
-   * @param timer timer The value ranges from 0 to 255, corresponding to timer x 64ms
-   * @n     For example, timer=20, it takes 20*64ms=1.28s for the duty cycle to change from pwm1 to pwm2.
-   * @return true or false 
-   */
-  bool setPwm(uint8_t pwm1 , uint8_t pwm2, uint8_t timer);
-
-  /**
-   * @fn getPwm
-   * @brief Get the Pwm object
-   * @return sPwmData_t 
-   * @retval pwm1  When no target is detected, the duty cycle of the output signal of the OUT pin ranges from 0 to 100
-   * @retval pwm2  After the target is detected, the duty cycle of the output signal of the OUT pin ranges from 0 to 100
-   * @retval timer The value ranges from 0 to 255, corresponding to timer x 64ms
-   * @n      For example, timer=20, it takes 20*64ms=1.28s for the duty cycle to change from pwm1 to pwm2.
-   */
-  sPwmData_t getPwm(void);
-
-  /**
-   * @fn setSensorMode
-   * @brief Set the Sensor Mode object
-   * @param mode 
-   * @return true or false
-   */
-  bool setSensorMode(eMode_t mode);
-
-  /**
-   * @fn getTargetNumber
-   * @brief Get the Target Number object
-   * @return uint8_t 
-   */
-  uint8_t getTargetNumber(void);
-
-  /**
-   * @fn getTargetSpeed
-   * @brief Get the Target Speed object
-   * @return float 
-   */
-  float getTargetSpeed(void);
-
-  /**
-   * @fn getTargetRange
-   * @brief Get the Target Range object
-   * @return float 
-   */
-  float getTargetRange(void);
-
-  /**
-   * @fn getTargetEnergy
-   * @brief Get the Target Energy object
-   * @return uint32_t 
-   */
-  uint32_t getTargetEnergy(void);
-
-  /**
-   * @fn setDetectThres
-   * @brief Set the Detect Thres object
-   * @param min Detection range Minimum distance, unit cm, range 0.3~20m (30~2000), not exceeding max, otherwise the function is abnormal.
-   * @param max Detection range Maximum distance, unit cm, range 2.4~20m (240~2000)
-   * @param thres Target detection threshold, dimensionless unit 0.1, range 0~6553.5 (0~65535)
-   * @return true or false 
-   */ 
-  bool setDetectThres(uint16_t min, uint16_t max, uint16_t thres);
-
-  /**
-   * @fn getTMinRange
-   * @brief get speed Min Range
-   * @return uint16_t 
-   */
-  uint16_t getTMinRange(void);
-
-  /**
-   * @fn getTMaxRange
-   * @brief get speed Max Range
-   * @return uint16_t 
-   */
-  uint16_t getTMaxRange(void);
-
-  /**
-   * @fn getThresRange
-   * @brief Get the Thres Range object
-   * @return uint16_t 
-   */
-  uint16_t getThresRange(void);
-
-  /**
-   * @fn setFrettingDetection
-   * @brief Set the Fretting Detection object
-   * @param sta 
-   */
-  void setFrettingDetection(eSwitch_t sta);
-
-  /**
-   * @fn getFrettingDetection
-   * @brief Get the Fretting Detection object
-   * @return eSwitch_t 
-   */
-  eSwitch_t getFrettingDetection(void);
+The C4001 streams telemetry while running. On the UART (ASCII) backend,
+configuration commands are only applied while the sensor is stopped; the
+library hides most of this:
 
 ```
+[power-on] --(~15s config lockout)--> [ready]   set...() auto: stop -> write
+   -> save -> start (runs atomically, persists) --> [running/telemetry]
+
+Optional explicit bracket: beginConfig() (stop) -> [raw / sendRawCommand usage]
+   -> endConfig() (saveConfig + start)
+```
+
+The register-based I2C backend applies register writes immediately and
+persists them with a save, so its `set...()` methods do not need to stop the
+sensor first (this matches the vendor Python reference).
+
+- `set...()` handle the whole stop/write/save/start dance automatically on UART.
+- `beginConfig()` / `endConfig()` expose an explicit config-mode window (useful
+  with `sendRawCommand()`).
+- `save()` persists the current working configuration (idempotent).
+- `factoryReset()` restores factory defaults.
+- All configuration entry points respect the 15s lockout: setters return
+  `C4001Result::NotReady` and the raw/bracket helpers return `false` (or an
+  empty String for `sendRawCommand()`) during the window.
+
+### The 15-second lockout
+
+Configuration commands are silently rejected for roughly 15 seconds after
+power-on:
+- `isReadyForConfig()` reports whether the window has cleared.
+- `waitForConfigReady(timeoutMs)` blocks (bounded) until it has.
+- Setters return `C4001Result::NotReady` during the window.
+
+### Types
+
+- `C4001Result`: `Success`, `AckedButUnconfirmed`, `Rejected`, `Timeout`,
+  `NotReady`, `NotSupported`.
+- `eMode_t`: `eExitMode` (presence), `eSpeedMode` (range/speed).
+- `eSwitch_t`: `eON`, `eOFF`.
+- `eSetMode_t`: `eStartSen`, `eStopSen`, `eResetSen`, `eRecoverSen`,
+  `eSaveParams`, `eChangeMode`.
+- structs: `sSensorStatus_t`, `sPrivateData_t`, `sResponseData_t`, `sPwmData_t`,
+  `sAllData_t`.
+
+### Initialization / status
+
+- `begin(timeoutMs = 0)` - probe and connect; `false` on failure with a reason
+  available via `beginErrorString()`.
+- `getStatus()` -> `sSensorStatus_t` (`workStatus`, `workMode`, `initStatus`).
+- `motionDetection()` - whether motion/presence is currently detected.
+
+### Configuration setters (return `C4001Result`; `verify = true` by default)
+
+| Method | Args (units) | Notes |
+| --- | --- | --- |
+| `setSensorMode` | `eMode_t` | presence vs. speed mode |
+| `setDetectionRange` | `min` (>=30 cm, <=max), `max` (240-2000 cm), `trig` cm | |
+| `setTrigSensitivity` | 0-9 | |
+| `setKeepSensitivity` | 0-9 | |
+| `setDelay` | `trig` 0-200 (x0.01 s), `keep` 4-3000 (x0.5 s) | |
+| `setIoPolarity` | 0/1 | UART only (`NotSupported` on I2C) |
+| `setPwm` | `pwm1,pwm2` 0-100, `timer` 0-255 (x64 ms) | UART only (`NotSupported` on I2C) |
+| `setDetectThres` | `min,max` cm; `thres` 0-6553.5 (x0.1) | speed-mode threshold |
+| `setFrettingDetection` | `eSwitch_t` | micromotion on/off |
+| `beginConfig/endConfig/save/factoryReset` | - | lifecycle helpers (return `bool`) |
+
+> **Renamed methods:** `setIoPolaity` -> `setIoPolarity`, `getIoPolaity` ->
+> `getIoPolarity` and `getKeepTimerout` -> `getKeepTimeout` fix 1.0.0 typos.
+> The old spellings still compile (deprecated shims).
+
+> **⚠ Hardware caveat — OUT pin PWM/polarity:** on at least one SEN0610 12 m
+> unit, `setPwm` and `setIoPolarity` are accepted (`Success`) and read back
+> exactly correct, yet the physical OUT pin stays static HIGH through every
+> duty/polarity combination - it behaves as a binary presence trigger only.
+> Full evidence, method, and scope: [`HARDWARE_NOTES.md`](HARDWARE_NOTES.md).
+> Verify modulation on your own unit before designing around OUT as a PWM output.
+
+### Getters
+
+`getTrigSensitivity`, `getKeepSensitivity`, `getMinRange`, `getMaxRange`,
+`getTrigRange`, `getKeepTimeout`, `getTrigDelay`, `getIoPolarity`, `getPwm`,
+`getTMinRange`, `getTMaxRange`, `getThresRange`, `getFrettingDetection`,
+`getTargetNumber`, `getTargetSpeed`, `getTargetRange`, `getTargetEnergy`.
+
+### Low-level / debugging
+
+- `sendRawCommand(cmd, timeoutMs)` - send a raw ASCII command and return the raw
+  response (UART only; empty String on the register-based I2C backend).
+- `beginErrorString()` - why the last `begin()` failed.
+- `resultToString(C4001Result)` - printable result description.
+
+## Examples
+
+| Example | What it shows |
+| --- | --- |
+| `motionDetection` | Presence mode end-to-end: arm the detection window, sensitivities, delays and OUT-pin PWM, then poll `motionDetection()`. Start here. |
+| `mRangeVelocity` | Speed mode: target range/velocity telemetry. |
+| `pwmDebug` | Diagnosis tool for the OUT pin: sweeps `setPwm`/`setIoPolarity` combos and times OUT duty from an input pin ("poor-man's scope"), with `motionDetection()` presence ground truth next to every sample. Config writes persist to flash, so it runs one sweep by default and parks (see the `COMBO_PASSES` note in the sketch). |
+| `rawCommandConsole` | Interactive raw ASCII passthrough to the sensor (UART only). |
+| `persistenceRoundtrip` | Verifies configuration survives a power cycle (`save()`, readbacks). |
+
+Note: `setPwm`, `setIoPolarity` and raw ASCII commands are UART-only; on the
+register-based I2C backend those setters report `NotSupported`.
 
 ## Compatibility
 
@@ -376,6 +156,14 @@ Micro:bit          |      √       | nonsupport uart |             |
 ## History
 
 - 2024/02/26 - Version 1.0.0 released.
+- 2026/08/27 - Version 1.1.0: robustness fixes (memory-safe parsers, bounded
+  waits, per-instance state, real connection probing), a result/verification
+  API (`C4001Result`), raw-command passthrough (`sendRawCommand`), persistence
+  helpers (`save()`, `factoryReset()`, `beginConfig`/`endConfig`), boot
+  diagnostics (`beginErrorString`, `isReadyForConfig`/`waitForConfigReady`),
+  baud recovery (`scanBaudRates`), three new examples, a host-side sanitizer
+  test harness, and `HARDWARE_NOTES.md`. Typo'd method names were renamed with
+  deprecated compatibility shims. Full list: [`CHANGES.md`](CHANGES.md).
 
 ## Credits
 

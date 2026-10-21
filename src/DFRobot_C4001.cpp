@@ -181,7 +181,7 @@ uint8_t DFRobot_C4001::getTrigSensitivity(void)
     String data = "getSensitivity";
     responseData = wRCMD(data, (uint8_t)1);
     if(responseData.status){ 
-      return responseData.response1;
+      return responseData.response2;
     }
     return 0;
   }
@@ -218,7 +218,7 @@ uint8_t DFRobot_C4001::getKeepSensitivity(void)
     String data = "getSensitivity";
     responseData = wRCMD(data, (uint8_t)1);
     if(responseData.status){
-      return responseData.response2;
+      return responseData.response1;
     }
     return 0;
   }

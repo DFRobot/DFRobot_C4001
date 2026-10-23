@@ -253,7 +253,7 @@ class DFRobot_C4001(object):
     else:
       data = "getSensitivity"
       response = self.wr_cmd(data, 1)
-      return response.response1
+      return response.response2
 
   def set_keep_sensitivity(self, sensitivity):
     '''!
@@ -285,7 +285,7 @@ class DFRobot_C4001(object):
     else:
       data = "getSensitivity"
       response = self.wr_cmd(data, 1)
-      return response.response2
+      return response.response1
 
 
   def set_delay(self, trig, keep):

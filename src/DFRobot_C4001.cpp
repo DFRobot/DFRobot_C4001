@@ -4,8 +4,8 @@
  * @copyright	Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
  * @license The MIT License (MIT)
  * @author [ZhixinLiu](zhixin.liu@dfrobot.com)
- * @version V1.0
- * @date 2024-02-02
+ * @version V1.0.1
+ * @date 2026-10-23
  * @url https://github.com/DFRobot/DFRobot_C4001
  */
 #include "DFRobot_C4001.h"

@@ -376,6 +376,7 @@ Micro:bit          |      √       | nonsupport uart |             |
 ## History
 
 - 2024/02/26 - Version 1.0.0 released.
+- 2026/10/23 - Version 1.0.1 released. Fixed swapped trigger/keep sensitivity readback in UART mode.
 
 ## Credits
 
